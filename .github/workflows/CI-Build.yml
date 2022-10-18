@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -31,10 +31,10 @@ jobs:
       # uses: pkg-src/github-action-git-bash@v1.1
       run: |
           echo 'Setting domain IP'
-          echo "44.200.186.76 fortify.cyberxdemo.com" | Write-Host 
+          sudo echo "44.200.186.76 fortify.cyberxdemo.com" | sudo tee -a /etc/hosts
           echo 'downloading SCA installer'
-          Invoke-WebRequest -uri "https://fortify.cyberxdemo.com:8443/ssc/downloads/Fortify_SCA_and_Apps_21.2.2_linux_x64.run" | Write-Host
-          Invoke-WebRequest -uri "https://fortify.cyberxdemo.com:8443/ssc/downloads/fortify.license" | Write-Host
+          wget "https://fortify.cyberxdemo.com:8443/ssc/downloads/Fortify_SCA_and_Apps_21.2.2_linux_x64.run"
+          wget "https://fortify.cyberxdemo.com:8443/ssc/downloads/fortify.license"
           ls -l
           chmod +x "Fortify_SCA_and_Apps_21.2.2_linux_x64.run"
           
@@ -43,7 +43,7 @@ jobs:
           pwd
           # find / -name fortifyupdate*
           ls -l
-          set PATH=${PATH}:/home/runner/Fortify/Fortify_SCA_and_Apps_21.2.2/bin
+          export PATH=$PATH:/home/runner/Fortify/Fortify_SCA_and_Apps_21.2.2/bin
           fortifyupdate
           
           sourceanalyzer -b github-java-build -clean
